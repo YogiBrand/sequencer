@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ReactFlowProvider } from '@xyflow/react';
 import { SequenceManager } from './components/SequenceManager/SequenceManager';
 import { SequenceBuilder } from './components/SequenceBuilder/SequenceBuilder';
 import { createSequenceClient } from './api/sequenceClient';
@@ -65,12 +66,14 @@ function App() {
           onSequenceSaved={(seq) => console.log('Saved:', seq)}
         />
       ) : (
-        <SequenceBuilder
-          sequenceId={selectedSequence?.id}
-          initialSequence={selectedSequence}
-          onSave={handleSave}
-          onClose={handleExitBuilder}
-        />
+        <ReactFlowProvider>
+          <SequenceBuilder
+            sequenceId={selectedSequence?.id}
+            initialSequence={selectedSequence}
+            onSave={handleSave}
+            onClose={handleExitBuilder}
+          />
+        </ReactFlowProvider>
       )}
     </div>
   );

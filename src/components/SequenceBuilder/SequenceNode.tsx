@@ -5,7 +5,7 @@ import type { FlowNode } from '../../types';
 import clsx from 'clsx';
 
 /**
- * Custom node component for React Flow
+ * Enhanced custom node component for React Flow with GoHighLevel-style design
  */
 export const SequenceNode: React.FC<NodeProps<FlowNode>> = ({ data, selected }) => {
   const nodeType = (data as any).type;
@@ -13,49 +13,118 @@ export const SequenceNode: React.FC<NodeProps<FlowNode>> = ({ data, selected }) 
   const canHaveInput = nodeType !== 'start';
   const canHaveOutput = nodeType !== 'end';
   const isCondition = nodeType === 'condition';
+  const showStats = (data as any).showStats || false;
+
+  // Mock stats data (would come from backend in real app)
+  const stats = {
+    sent: Math.floor(Math.random() * 100) + 10,
+    opened: Math.floor(Math.random() * 80),
+    clicked: Math.floor(Math.random() * 40),
+    responded: Math.floor(Math.random() * 30),
+  };
 
   return (
     <div
       className={clsx(
-        'px-4 py-3 rounded-lg shadow-md border-2 min-w-[180px] max-w-[250px]',
-        'bg-white transition-all',
-        selected ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-300'
+        'px-4 py-3 rounded-lg shadow-lg border-2 min-w-[200px] max-w-[280px]',
+        'bg-white transition-all duration-200',
+        selected ? 'border-blue-500 ring-4 ring-blue-200 shadow-xl' : 'border-gray-300 hover:border-gray-400'
       )}
       style={{
         borderLeftColor: nodeInfo.color,
-        borderLeftWidth: '4px',
+        borderLeftWidth: '5px',
       }}
     >
       {canHaveInput && (
         <Handle
           type="target"
           position={Position.Top}
-          className="w-3 h-3 !bg-gray-400"
+          className="w-3 h-3 !bg-blue-500 border-2 border-white"
         />
       )}
 
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-xl">{nodeInfo.icon}</span>
-        <span className="text-xs font-semibold text-gray-500 uppercase">
-          {nodeInfo.label}
-        </span>
-      </div>
-
-      <div className="text-sm font-medium text-gray-900">
-        {data.label || nodeInfo.label}
-      </div>
-
-      {/* Show delay if applicable */}
-      {((data.delay_days || 0) > 0 || (data.delay_hours || 0) > 0) && (
-        <div className="text-xs text-gray-500 mt-1">
-          Delay: {data.delay_days || 0}d {data.delay_hours || 0}h
+      {/* Node Header */}
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex items-center gap-2 flex-1">
+          <span className="text-2xl flex-shrink-0">{nodeInfo.icon}</span>
+          <div className="flex-1 min-w-0">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              {nodeInfo.label}
+            </div>
+            <div className="text-sm font-semibold text-gray-900 truncate mt-0.5">
+              {data.label || nodeInfo.label}
+            </div>
+          </div>
         </div>
-      )}
+        {/* Status Indicator */}
+        {data.require_review && (
+          <span className="flex-shrink-0 w-2 h-2 bg-orange-500 rounded-full" title="Requires Review" />
+        )}
+      </div>
 
-      {/* Show condition type */}
-      {isCondition && data.condition && (
-        <div className="text-xs text-gray-500 mt-1">
-          If: {data.condition}
+      {/* Node Details */}
+      <div className="space-y-1">
+        {/* Delay Information */}
+        {((data.delay_days || 0) > 0 || (data.delay_hours || 0) > 0) && (
+          <div className="flex items-center gap-1.5 text-xs text-gray-600">
+            <span className="text-gray-400">⏱</span>
+            <span>
+              {data.delay_days > 0 && `${data.delay_days}d `}
+              {data.delay_hours > 0 && `${data.delay_hours}h`}
+            </span>
+          </div>
+        )}
+
+        {/* Condition Information */}
+        {isCondition && data.condition && (
+          <div className="flex items-center gap-1.5 text-xs text-gray-600">
+            <span className="text-gray-400">◇</span>
+            <span className="truncate">If: {data.condition}</span>
+          </div>
+        )}
+
+        {/* AI Enabled */}
+        {(data.use_ai_writer || data.ai_instructions) && (
+          <div className="flex items-center gap-1.5 text-xs text-purple-600">
+            <span>🤖</span>
+            <span>AI Enabled</span>
+          </div>
+        )}
+
+        {/* Manual Send */}
+        {data.manual_send && (
+          <div className="flex items-center gap-1.5 text-xs text-blue-600">
+            <span>👤</span>
+            <span>Manual Send</span>
+          </div>
+        )}
+      </div>
+
+      {/* Stats View (when enabled) */}
+      {showStats && nodeType !== 'start' && nodeType !== 'end' && (
+        <div className="mt-3 pt-3 border-t border-gray-200">
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="flex flex-col">
+              <span className="text-gray-500">Sent</span>
+              <span className="font-semibold text-gray-900">{stats.sent}</span>
+            </div>
+            {(nodeType === 'email' || nodeType === 'sms') && (
+              <>
+                <div className="flex flex-col">
+                  <span className="text-gray-500">Opened</span>
+                  <span className="font-semibold text-green-600">{stats.opened}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-gray-500">Clicked</span>
+                  <span className="font-semibold text-blue-600">{stats.clicked}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-gray-500">Responded</span>
+                  <span className="font-semibold text-purple-600">{stats.responded}</span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
 
@@ -63,7 +132,7 @@ export const SequenceNode: React.FC<NodeProps<FlowNode>> = ({ data, selected }) 
         <Handle
           type="source"
           position={Position.Bottom}
-          className="w-3 h-3 !bg-gray-400"
+          className="w-3 h-3 !bg-blue-500 border-2 border-white"
         />
       )}
     </div>
