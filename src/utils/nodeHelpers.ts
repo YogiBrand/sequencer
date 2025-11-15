@@ -81,7 +81,7 @@ export const NODE_TYPE_INFO: Record<SequenceNodeType, NodeTypeInfo> = {
     label: 'SmartScan',
     icon: '🔍',
     color: '#14b8a6',
-    description: 'AI-powered property scan',
+    description: 'AI-powered roof assessment with damage detection, measurements, and heatmaps',
     category: 'ai',
   },
   task: {
@@ -105,7 +105,7 @@ export const NODE_TYPE_INFO: Record<SequenceNodeType, NodeTypeInfo> = {
     label: 'Report',
     icon: '📊',
     color: '#06b6d4',
-    description: 'Generate and send a report',
+    description: 'Generate roof inspection reports with imagery, financing, and insurance docs',
     category: 'action',
   },
 };
@@ -166,14 +166,27 @@ export function getDefaultNodeData(type: SequenceNodeType): SequenceNodeData {
       return {
         ...baseData,
         condition: 'lead_responded',
+        // Roofing-specific conditions available:
+        // - storm_damage_detected
+        // - roof_age_over_10_years
+        // - roof_age_over_20_years
+        // - lead_score_above_70
+        // - insurance_claim_filed
+        // - project_scope_full_replacement
+        // - urgent_repair_needed
       };
 
     case 'smartscan':
       return {
         ...baseData,
-        scan_type: 'full',
+        scan_type: 'full_roof_assessment',
         include_heatmap: true,
         notify_team: false,
+        // Roofing-specific scan options:
+        detect_damage: true,
+        measure_dimensions: true,
+        capture_photos: false,
+        // Scan types: full_roof_assessment, storm_damage, routine_inspection, leak_detection
       };
 
     case 'task':
@@ -195,10 +208,15 @@ export function getDefaultNodeData(type: SequenceNodeType): SequenceNodeData {
     case 'report':
       return {
         ...baseData,
-        template: 'standard',
+        template: 'full_inspection',
         attach_imagery: true,
-        include_financing: false,
+        include_financing: true,
         delivery_channel: 'email',
+        // Roofing-specific report options:
+        include_insurance_docs: false,
+        include_warranty_info: false,
+        include_material_options: false,
+        // Templates: full_inspection, storm_damage, routine_maintenance, estimate_proposal
       };
 
     default:

@@ -96,6 +96,10 @@ export interface SmartScanNodeData extends BaseNodeData {
   include_heatmap?: boolean;
   notify_team?: boolean;
   notes?: string;
+  // Roofing-specific fields
+  detect_damage?: boolean;
+  measure_dimensions?: boolean;
+  capture_photos?: boolean;
 }
 
 /**
@@ -126,6 +130,10 @@ export interface ReportNodeData extends BaseNodeData {
   include_financing?: boolean;
   delivery_channel?: string;
   notes?: string;
+  // Roofing-specific fields
+  include_insurance_docs?: boolean;
+  include_warranty_info?: boolean;
+  include_material_options?: boolean;
 }
 
 /**

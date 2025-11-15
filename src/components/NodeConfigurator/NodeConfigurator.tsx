@@ -202,10 +202,19 @@ export const NodeConfigurator: React.FC<NodeConfiguratorProps> = ({
             value={data.condition || 'lead_responded'}
             onChange={(e) => handleChange('condition', e.target.value)}
             options={[
+              // General Conditions
               { value: 'lead_responded', label: 'Lead Responded' },
               { value: 'lead_booked', label: 'Lead Booked Appointment' },
               { value: 'email_opened', label: 'Email Opened' },
               { value: 'link_clicked', label: 'Link Clicked' },
+              // Roofing-Specific Conditions
+              { value: 'storm_damage_detected', label: '🌩️ Storm Damage Detected' },
+              { value: 'roof_age_over_10_years', label: '🏠 Roof Age > 10 Years' },
+              { value: 'roof_age_over_20_years', label: '🏠 Roof Age > 20 Years' },
+              { value: 'lead_score_above_70', label: '⭐ Lead Score > 70' },
+              { value: 'insurance_claim_filed', label: '📋 Insurance Claim Filed' },
+              { value: 'project_scope_full_replacement', label: '🔨 Full Replacement Needed' },
+              { value: 'urgent_repair_needed', label: '🚨 Urgent Repair Needed' },
             ]}
           />
         );
@@ -215,12 +224,14 @@ export const NodeConfigurator: React.FC<NodeConfiguratorProps> = ({
           <>
             <Select
               label="Scan Type"
-              value={data.scan_type || 'full'}
+              value={data.scan_type || 'full_roof_assessment'}
               onChange={(e) => handleChange('scan_type', e.target.value)}
               options={[
-                { value: 'full', label: 'Full Scan' },
+                { value: 'full_roof_assessment', label: '🔍 Full Roof Assessment' },
+                { value: 'storm_damage', label: '🌩️ Storm Damage Detection' },
+                { value: 'routine_inspection', label: '📋 Routine Inspection' },
+                { value: 'leak_detection', label: '💧 Leak Detection' },
                 { value: 'quick', label: 'Quick Scan' },
-                { value: 'roof_only', label: 'Roof Only' },
               ]}
             />
 
@@ -232,6 +243,36 @@ export const NodeConfigurator: React.FC<NodeConfiguratorProps> = ({
                 className="rounded"
               />
               <span className="text-sm font-medium">Include Heatmap</span>
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.detect_damage ?? true}
+                onChange={(e) => handleChange('detect_damage', e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm font-medium">🔍 Detect Damage</span>
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.measure_dimensions ?? true}
+                onChange={(e) => handleChange('measure_dimensions', e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm font-medium">📏 Measure Dimensions</span>
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.capture_photos || false}
+                onChange={(e) => handleChange('capture_photos', e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm font-medium">📷 Capture Photos</span>
             </label>
 
             <label className="flex items-center gap-2">
@@ -313,11 +354,14 @@ export const NodeConfigurator: React.FC<NodeConfiguratorProps> = ({
           <>
             <Select
               label="Template"
-              value={String(data.template || 'standard')}
+              value={String(data.template || 'full_inspection')}
               onChange={(e) => handleChange('template', e.target.value)}
               options={[
+                { value: 'full_inspection', label: '🔍 Full Inspection Report' },
+                { value: 'storm_damage', label: '🌩️ Storm Damage Assessment' },
+                { value: 'routine_maintenance', label: '📋 Routine Maintenance' },
+                { value: 'estimate_proposal', label: '💰 Estimate & Proposal' },
                 { value: 'standard', label: 'Standard Report' },
-                { value: 'detailed', label: 'Detailed Report' },
                 { value: 'executive', label: 'Executive Summary' },
               ]}
             />
@@ -329,17 +373,47 @@ export const NodeConfigurator: React.FC<NodeConfiguratorProps> = ({
                 onChange={(e) => handleChange('attach_imagery', e.target.checked)}
                 className="rounded"
               />
-              <span className="text-sm font-medium">Attach Imagery</span>
+              <span className="text-sm font-medium">📷 Attach Imagery</span>
             </label>
 
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
-                checked={data.include_financing || false}
+                checked={data.include_financing ?? true}
                 onChange={(e) => handleChange('include_financing', e.target.checked)}
                 className="rounded"
               />
-              <span className="text-sm font-medium">Include Financing Options</span>
+              <span className="text-sm font-medium">💳 Include Financing Options</span>
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.include_insurance_docs || false}
+                onChange={(e) => handleChange('include_insurance_docs', e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm font-medium">📋 Include Insurance Docs</span>
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.include_warranty_info || false}
+                onChange={(e) => handleChange('include_warranty_info', e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm font-medium">🛡️ Include Warranty Info</span>
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={data.include_material_options || false}
+                onChange={(e) => handleChange('include_material_options', e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm font-medium">🏗️ Include Material Options</span>
             </label>
 
             <Select
