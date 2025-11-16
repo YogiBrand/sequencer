@@ -3,12 +3,10 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
 
-// Start MSW in development mode
+// Start MSW for mock backend (runs in both dev and production)
 async function enableMocking() {
-  if (import.meta.env.DEV) {
-    const { startMocking } = await import('./mocks/browser');
-    return startMocking();
-  }
+  const { startMocking } = await import('./mocks/browser');
+  return startMocking();
 }
 
 enableMocking().then(() => {

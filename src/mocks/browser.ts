@@ -20,5 +20,9 @@ export async function startMocking() {
 
   return worker.start({
     onUnhandledRequest: 'bypass', // Don't warn about unhandled requests
+    quiet: !import.meta.env.DEV, // Quiet mode in production
+    serviceWorker: {
+      url: '/mockServiceWorker.js',
+    },
   });
 }
