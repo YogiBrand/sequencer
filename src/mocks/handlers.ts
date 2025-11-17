@@ -12,16 +12,17 @@ const db = new MockDatabase();
 
 /**
  * API request handlers
+ * Using http://localhost:8000 to match the client's baseURL
  */
 export const handlers = [
   // GET /api/sequences - List all sequences
-  http.get('/api/sequences', () => {
+  http.get('http://localhost:8000/api/sequences', () => {
     const sequences = db.getAllSequences();
     return HttpResponse.json(sequences);
   }),
 
   // GET /api/sequences/:id - Get a single sequence
-  http.get('/api/sequences/:id', ({ params }) => {
+  http.get('http://localhost:8000/api/sequences/:id', ({ params }) => {
     const id = Number(params.id);
     const sequence = db.getSequence(id);
 
@@ -36,7 +37,7 @@ export const handlers = [
   }),
 
   // POST /api/sequences - Create a new sequence
-  http.post('/api/sequences', async ({ request }) => {
+  http.post('http://localhost:8000/api/sequences', async ({ request }) => {
     const payload = (await request.json()) as unknown as CreateSequencePayload;
 
     let flow_data = null;
@@ -63,7 +64,7 @@ export const handlers = [
   }),
 
   // PUT /api/sequences/:id - Update a sequence
-  http.put('/api/sequences/:id', async ({ params, request }) => {
+  http.put('http://localhost:8000/api/sequences/:id', async ({ params, request }) => {
     const id = Number(params.id);
     const updates = (await request.json()) as unknown as Partial<Sequence>;
 
@@ -80,7 +81,7 @@ export const handlers = [
   }),
 
   // DELETE /api/sequences/:id - Delete a sequence
-  http.delete('/api/sequences/:id', ({ params }) => {
+  http.delete('http://localhost:8000/api/sequences/:id', ({ params }) => {
     const id = Number(params.id);
     const deleted = db.deleteSequence(id);
 
@@ -98,12 +99,12 @@ export const handlers = [
   }),
 
   // GET /api/sequences/templates - Get sequence templates
-  http.get('/api/sequences/templates', () => {
+  http.get('http://localhost:8000/api/sequences/templates', () => {
     return HttpResponse.json(mockTemplates);
   }),
 
   // POST /api/sequences/:id/enroll - Enroll leads in a sequence
-  http.post('/api/sequences/:id/enroll', async ({ params, request }) => {
+  http.post('http://localhost:8000/api/sequences/:id/enroll', async ({ params, request }) => {
     const sequenceId = Number(params.id);
     const { lead_ids } = (await request.json()) as { lead_ids: number[] };
 
@@ -136,7 +137,7 @@ export const handlers = [
   }),
 
   // PUT /api/sequences/enrollments/:id - Update an enrollment
-  http.put('/api/sequences/enrollments/:id', async ({ params, request }) => {
+  http.put('http://localhost:8000/api/sequences/enrollments/:id', async ({ params, request }) => {
     const enrollmentId = Number(params.id);
     const { action, notes } = (await request.json()) as { action: string; notes?: string };
 
@@ -152,7 +153,7 @@ export const handlers = [
   }),
 
   // POST /api/sequences/process - Trigger sequence processing
-  http.post('/api/sequences/process', () => {
+  http.post('http://localhost:8000/api/sequences/process', () => {
     return HttpResponse.json({
       status: 'success',
       message: 'Processing triggered successfully',
@@ -161,7 +162,7 @@ export const handlers = [
   }),
 
   // GET /api/sequences/:id/performance - Get sequence performance
-  http.get('/api/sequences/:id/performance', ({ params }) => {
+  http.get('http://localhost:8000/api/sequences/:id/performance', ({ params }) => {
     const sequenceId = Number(params.id);
     const sequence = db.getSequence(sequenceId);
 
@@ -192,7 +193,7 @@ export const handlers = [
   }),
 
   // GET /api/sequences/:id/analytics - Get sequence analytics
-  http.get('/api/sequences/:id/analytics', ({ params }) => {
+  http.get('http://localhost:8000/api/sequences/:id/analytics', ({ params }) => {
     const sequenceId = Number(params.id);
     const sequence = db.getSequence(sequenceId);
 
